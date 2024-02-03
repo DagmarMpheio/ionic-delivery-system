@@ -15,22 +15,15 @@
 
   <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
 
-  <ion-card *ngFor="let product of products">
+  <ion-card *ngFor="let product of products">  
+    <ion-img [src]="product.imgUrl" alt="Imagem do Produto"></ion-img>
     <ion-card-header>
       <ion-card-title>{{ product.nome }}</ion-card-title>
+      <ion-card-subtitle>{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
-      <ion-img [src]="product.imgUrl" alt="Imagem do Produto"></ion-img>
-      <p>Preço Original: R$ {{ product.preco }}</p>
-      <p>Descrição: {{ product.descricao }}</p>
-      <p *ngIf="product.emPromocao">
-        Desconto: {{ product.desconto }}%
-        <br>
-        Preço com Desconto: R$ {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) }}
-      </p>
-      <p *ngIf="!product.emPromocao">Este producto não está em promoção.</p>
+      {{ product.descricao }}
     </ion-card-content>
-  </ion-card>
-  
+  </ion-card>  
 </ion-content>

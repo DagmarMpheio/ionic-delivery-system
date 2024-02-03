@@ -5,5 +5,6 @@ export interface Product {
   descricao: string;
   emPromocao: boolean;
   desconto?: number;
-  imgUrl: number;
+  imgUrl: string;
+  supermercadoId: string;
 }

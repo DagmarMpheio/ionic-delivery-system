@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Produtos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let product of products" lines="full">
+      <ion-avatar slot="start" class="avatar">
+        <img [src]="product.imgUrl" [alt]="product.nome" />
+      </ion-avatar>
+
+      <ion-label class="animate__animated animate__backInLeft">
+        <strong size="large"> {{product.nome }} </strong>
+        <p>{{ product.preco | currency:'KZ ' }}</p>
+      </ion-label>
+
+      <div item-end class="animate__animated animate__backInLeft">
+        <ion-button [routerLink]="['/update-product/',product.id]" fill="outline" size="small">
+          <ion-icon slot="start" name="create" style="zoom:1.5" color="primary"></ion-icon>
+        </ion-button>
+		
+        <ion-button (click)="remove(product.id)" fill="outline" size="small">
+          <ion-icon slot="start" name="trash" style="zoom:1.5" color="danger"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+    <ion-fab-button [routerLink]="['/add-product']" routerLinkActive="router-link-active" >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -49,7 +49,9 @@ export class ProductService {
 
   // Obter produtos em promoção
   getPromotedProducts() {
-    return this.ngFirestore.collection('produtos', ref => ref.where('emPromocao', '==', true)).snapshotChanges();
+    return this.ngFirestore
+      .collection('produtos', (ref) => ref.where('emPromocao', '==', true))
+      .snapshotChanges();
   }
 
   // Calcular preço com desconto
@@ -61,5 +63,10 @@ export class ProductService {
     } else {
       return preco; // Retornar o preço sem desconto se o desconto for inválido
     }
+  }
+
+  //Método para obter a lista de supermercados
+  getSupermarketsList() {
+    return this.ngFirestore.collection('supermercados').snapshotChanges();
   }
 }

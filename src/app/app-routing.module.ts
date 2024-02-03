@@ -25,6 +25,18 @@ const routes: Routes = [
   {
     path: 'password-reset',
     loadChildren: () => import('./password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
+  },
+  {
+    path: 'add-product',
+    loadChildren: () => import('./products/add-product/add-product.module').then( m => m.AddProductPageModule)
+  },
+  {
+    path: 'product-list',
+    loadChildren: () => import('./products/product-list/product-list.module').then( m => m.ProductListPageModule)
+  },
+  {
+    path: 'update-product/:id',
+    loadChildren: () => import('./products/update-product/update-product.module').then( m => m.UpdateProductPageModule)
   }
 ];
 @NgModule({
