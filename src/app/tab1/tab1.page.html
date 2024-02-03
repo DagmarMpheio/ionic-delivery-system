@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Produtos
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,28 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Promoção</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
+
+  <ion-card *ngFor="let product of products">
+    <ion-card-header>
+      <ion-card-title>{{ product.nome }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-img [src]="product.imgUrl" alt="Imagem do Produto"></ion-img>
+      <p>Preço Original: R$ {{ product.preco }}</p>
+      <p>Descrição: {{ product.descricao }}</p>
+      <p *ngIf="product.emPromocao">
+        Desconto: {{ product.desconto }}%
+        <br>
+        Preço com Desconto: R$ {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) }}
+      </p>
+      <p *ngIf="!product.emPromocao">Este producto não está em promoção.</p>
+    </ion-card-content>
+  </ion-card>
+  
 </ion-content>
