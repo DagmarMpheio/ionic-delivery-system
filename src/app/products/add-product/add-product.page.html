@@ -18,10 +18,6 @@
       <ion-input formControlName="preco" type="number" required> </ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="floating">Imagem URL</ion-label>
-      <ion-input formControlName="imgUrl" type="text" required> </ion-input>
-    </ion-item>
-    <ion-item>
       <ion-label position="floating">Descrição</ion-label>
       <ion-input formControlName="descricao" type="text" required> </ion-input>
     </ion-item>
@@ -30,6 +26,12 @@
         <ion-select-option *ngFor="let supermercado of supermercados" [value]="supermercado.id">  {{ supermercado.nome }}</ion-select-option>
       </ion-select>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Escolha uma Imagem</ion-label>
+        <ion-input type="file" (change)="onFileSelected($event)" id="imageFile" formControlName="imageFile" accept="image/*"></ion-input>
+    </ion-item>
+
     <ion-row>
       <ion-col>
         <ion-button type="submit" color="primary" shape="full" expand="block">

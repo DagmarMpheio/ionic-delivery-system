@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../shared/product.service';
 import { Supermarket } from '../../../shared/supermarket';
 import { Router } from '@angular/router';
-import { AlertController  } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-add-product',
@@ -13,12 +13,13 @@ import { AlertController  } from '@ionic/angular';
 export class AddProductPage implements OnInit {
   productForm: FormGroup;
   supermercados: Supermarket[];
+  imageFile: File;
 
   constructor(
     private productService: ProductService,
     public formBuilder: FormBuilder,
     private router: Router,
-    private alertController: AlertController 
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -28,8 +29,8 @@ export class AddProductPage implements OnInit {
       descricao: ['', Validators.required],
       emPromocao: [false],
       desconto: [0, [Validators.min(0), Validators.max(100)]],
-      imgUrl: [''],
       supermercadoId: ['', Validators.required],
+      imageFile: [null, Validators.required],
     });
 
     // Carregue a lista de supermercados
@@ -48,7 +49,7 @@ export class AddProductPage implements OnInit {
       return false;
     } else {
       return this.productService
-        .createProduct(this.productForm.value)
+        .createProduct(this.productForm.value, this.imageFile)
         .then((res) => {
           console.log(res);
           this.productForm.reset();
@@ -59,11 +60,15 @@ export class AddProductPage implements OnInit {
     }
   }
 
+  onFileSelected(event: any): void {
+    this.imageFile = event.target.files[0];
+  }
+
   async presentSuccessAlert() {
     const alert = await this.alertController.create({
       header: 'Sucesso!',
       message: 'Produto cadastrado com sucesso.',
-      buttons: ['OK']
+      buttons: ['OK'],
     });
 
     await alert.present();

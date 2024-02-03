@@ -33,10 +33,10 @@ export class ProductListPage implements OnInit {
     });
   }
 
-  remove(id: any) {
+  remove(id: string, imageUrl: string) {
     console.log(id);
     if (window.confirm('Tem a certeza que deseja excluir?')) {
-      this.productService.deleteProduct(id);
+      this.productService.deleteProduct(id, imageUrl);
       this.presentSuccessAlert();
     }
   }

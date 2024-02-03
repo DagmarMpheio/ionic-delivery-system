@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form [formGroup]="editProductForm" (ngSubmit)="formSubmit()" class="animate__animated animate__fadeInDown">
+  <form [formGroup]="editProductForm" (ngSubmit)="formSubmit()" class="animate__animated animate__fadeInLeft">
     
     <ion-avatar class="product-image">
       <img [src]="editProductForm.value.imgUrl" [alt]="editProductForm.value.nome" />
@@ -21,10 +21,6 @@
     <ion-item>
       <ion-label position="floating">Preço</ion-label>
       <ion-input formControlName="preco" type="number" required> </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Imagem URL</ion-label>
-      <ion-input formControlName="imgUrl" type="text" required> </ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Descrição</ion-label>
