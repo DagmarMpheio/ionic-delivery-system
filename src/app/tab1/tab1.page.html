@@ -19,7 +19,13 @@
     <ion-img [src]="product.imgUrl" alt="Imagem do Produto"></ion-img>
     <ion-card-header>
       <ion-card-title>{{ product.nome }}</ion-card-title>
-      <ion-card-subtitle>{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
+       <!-- Preco normal -->
+      <ion-card-subtitle *ngIf="!product.emPromocao">{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
+       <!-- Preco com promocao -->
+      <ion-card-subtitle *ngIf="product.emPromocao"> Desconto: {{ product.desconto }}%
+        <br>
+        {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) | currency:'KZ ' }}
+      </ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
