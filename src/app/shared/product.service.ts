@@ -104,6 +104,34 @@ export class ProductService {
     return this.ngFirestore.collection('supermercados').snapshotChanges();
   }
 
+  // Marcar um produto como em promoção
+  markProductAsPromotional(productId: string, desconto: number) {
+    this.ngFirestore
+      .collection('produtos')
+      .doc(productId)
+      .update({ emPromocao: true, desconto: desconto })
+      .then(() => {
+        console.log('Produto adicionado da promoção com sucesso.');
+      })
+      .catch((error) => {
+        console.log('Erro ao adicionar o produto da promoção\nErro: ' + error);
+      });
+  }
+
+  // Remover um produto da promoção
+  removeProductFromPromotion(productId: any) {
+    this.ngFirestore
+      .collection('produtos')
+      .doc(productId)
+      .update({ emPromocao: false, desconto: 0 })
+      .then(() => {
+        console.log('Produto removido da promoção com sucesso.');
+      })
+      .catch((error) => {
+        console.log('Erro ao remover o produto da promoção\nErro: ' + error);
+      });
+  }
+
   //metodo para fazer upload de imagens
   uploadImage(file: File) {
     const currentDate = Date.now();

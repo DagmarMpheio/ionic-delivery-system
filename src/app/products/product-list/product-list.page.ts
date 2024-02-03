@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../shared/product';
 import { ProductService } from '../../shared/product.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { DiscountModalPage } from '../discount-modal/discount-modal.page';
+import { DiscountService } from '../../shared/discount.service';
 
 @Component({
   selector: 'app-product-list',
@@ -10,10 +12,13 @@ import { AlertController } from '@ionic/angular';
 })
 export class ProductListPage implements OnInit {
   products: Product[] = [];
+  desconto: number;
 
   constructor(
     public productService: ProductService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private modalController: ModalController,
+    private discountService: DiscountService
   ) {}
 
   ngOnInit() {
@@ -37,14 +42,43 @@ export class ProductListPage implements OnInit {
     console.log(id);
     if (window.confirm('Tem a certeza que deseja excluir?')) {
       this.productService.deleteProduct(id, imageUrl);
-      this.presentSuccessAlert();
+      this.presentSuccessAlert('Produto excluído com sucesso.');
     }
   }
 
-  async presentSuccessAlert() {
+  // Abrir a modal para inserir desconto
+  async openDiscountModal(id: any): Promise<void> {
+    const modal = await this.modalController.create({
+      component: DiscountModalPage,
+    });
+
+    modal.onDidDismiss().then((data) => {
+      this.desconto = this.discountService.getDesconto();
+      this.productService.markProductAsPromotional(id, this.desconto);
+      console.log('Desconto aplicado:', this.desconto);
+      this.presentSuccessAlert('Produto adicionado na promoção sucesso.');
+    });
+
+    await modal.present();
+  }
+
+  /* makePromotional(id: any) {
+    this.productService.markProductAsPromotional(id, this.desconto);
+    console.log('Desconto aplicado agora:', this.desconto);
+  } */
+
+  removePromotional(id: any) {
+    console.log(id);
+    if (window.confirm('Tem a certeza que deseja remover da promoção?')) {
+      this.productService.removeProductFromPromotion(id);
+      this.presentSuccessAlert('Produto removido da promoção sucesso.');
+    }
+  }
+
+  async presentSuccessAlert(message: string) {
     const alert = await this.alertController.create({
       header: 'Sucesso!',
-      message: 'Produto excluído com sucesso.',
+      message: message,
       buttons: ['OK'],
     });
 

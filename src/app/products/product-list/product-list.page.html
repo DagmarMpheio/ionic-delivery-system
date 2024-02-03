@@ -13,10 +13,27 @@
 
       <ion-label class="animate__animated animate__backInLeft">
         <strong size="large"> {{product.nome }} </strong>
-        <p>{{ product.preco | currency:'KZ ' }}</p>
+        <!-- Preco normal -->
+        <p *ngIf="!product.emPromocao">{{ product.preco | currency:'KZ ' }}</p>
+        <!-- Preco com promocao -->
+        <p *ngIf="product.emPromocao">
+          Desconto: {{ product.desconto }}%
+          <br>
+          {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) | currency:'KZ ' }}
+        </p>
       </ion-label>
 
       <div item-end class="animate__animated animate__backInLeft">
+      <!-- Botão para marcar como em promoção -->
+      <ion-button *ngIf="!product.emPromocao" (click)="openDiscountModal(product.id)" fill="outline" size="small">
+        <ion-icon slot="start" name="pricetag" style="zoom:1.5" color="success"></ion-icon>
+      </ion-button>
+      
+      <!-- Botão para remover da promoção -->
+      <ion-button *ngIf="product.emPromocao" (click)="removePromotional(product.id)" fill="outline" size="small">
+        <ion-icon slot="start" name="pricetag" style="zoom:1.5" color="danger"></ion-icon>
+      </ion-button>
+
         <ion-button [routerLink]="['/update-product/',product.id]" fill="outline" size="small">
           <ion-icon slot="start" name="create" style="zoom:1.5" color="primary"></ion-icon>
         </ion-button>

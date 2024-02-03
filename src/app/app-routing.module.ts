@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'update-product/:id',
     loadChildren: () => import('./products/update-product/update-product.module').then( m => m.UpdateProductPageModule)
+  },
+  {
+    path: 'discount-modal',
+    loadChildren: () => import('./products/discount-modal/discount-modal.module').then( m => m.DiscountModalPageModule)
   }
 ];
 @NgModule({
