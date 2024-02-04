@@ -2,6 +2,8 @@ import { Product } from './product';
 
 export class Cart {
   id?: string;
+  nome?: string;
+  imgUrl?: string;
   quantity: number;
   product: Product;
   price: number;

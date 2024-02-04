@@ -3,6 +3,7 @@ import { Cart } from './cart';
 export class Order {
   $key: String;
   formaPagamento: string;
+  referenciaBancaria?: string;
   status: string;
   userId: string;
   endereco: string;
@@ -13,6 +14,7 @@ export class Order {
   toJSON() {
     return {
       formaPagamento: this.formaPagamento,
+      referenciaBancaria:this.referenciaBancaria,
       status: this.status,
       userId: this.userId,
       endereco: this.endereco,

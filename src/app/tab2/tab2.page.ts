@@ -3,6 +3,9 @@ import { CartService } from '../shared/cart.service';
 import { Cart } from 'src/shared/cart';
 import { OrdersService } from '../shared/orders.service';
 import { Order } from 'src/shared/order';
+import { ModalController, AlertController } from '@ionic/angular';
+import { CheckoutModalPage } from '../products/checkout-modal/checkout-modal.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -14,7 +17,10 @@ export class Tab2Page {
 
   constructor(
     private cartService: CartService,
-    private orderService: OrdersService
+    private orderService: OrdersService,
+    private modalController: ModalController,
+    private alertController: AlertController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -49,33 +55,59 @@ export class Tab2Page {
     return typeof this.cartItems;
   }
 
-  continuarCompra(): void {
-    console.log('Objecto map: ', this.cartItems);
-    const cartItemsType: string = this.getCartItemsType();
-    console.log('Type of cartItems:', cartItemsType);
-    // Criar uma instância de Order com os dados do carrinho e outros detalhes necessários
-    const compraInfo = new Order();
-    compraInfo.userId = 'PbDQAbB985eLf1hNRSsrMYiP6ep1';
-    compraInfo.formaPagamento = 'Cartão de Crédito';
-    compraInfo.status = 'Pendente';
-    compraInfo.endereco = 'Rua da Compra, 123';
-    compraInfo.total = this.total; // Valor total da compra
-    //compraInfo.items = this.cartItems;
-    compraInfo.items = this.cartItems;
-    compraInfo.dataHoraCompra = new Date().toISOString(); // Usar a data/hora atual ou obtenha de outra maneira
+  async continuarCompra() {
+    const modal = await this.modalController.create({
+      component: CheckoutModalPage,
+    });
 
-    console.log('compraInfo:', compraInfo);
+    // Obtain the UID from localStorage
+    const userUID = JSON.parse(localStorage.getItem('user') || '{}').uid;
 
-    // Chame o método continuarComprar do PedidoService
-    this.orderService
-      .continuarComprar(compraInfo)
-      .then(() => {
-        // Ações adicionais após o registro da compra (ex: limpar o carrinho)
-        this.cartService.clearCart();
-        console.log('A compra foi registrada com sucesso!');
-      })
-      .catch((error) => {
-        console.error('Erro ao registrar a compra:', error);
-      });
+    modal.onDidDismiss().then((data) => {
+      if (data && data.data) {
+        // Criar uma instância de Order com os dados do carrinho e outros detalhes necessários
+        const compraInfo = new Order();
+        compraInfo.userId = userUID;
+        compraInfo.formaPagamento = data.data.paymentMethod;
+        compraInfo.status = 'Pendente';
+        compraInfo.endereco = data.data.deliveryAddress;
+        compraInfo.total = this.total;
+        compraInfo.items = this.cartItems;
+        compraInfo.dataHoraCompra = new Date().toISOString();
+
+        // Add  referencia bancaria se a forma de pagamento for "Referência Bancária"
+        if (data.data.paymentMethod === 'Referência Bancária') {
+          compraInfo.referenciaBancaria = data.data.bankReference;
+        } else {
+          compraInfo.referenciaBancaria = '';
+        }
+
+        console.log("compraInfo: ",compraInfo);
+
+        this.orderService
+          .continuarComprar(compraInfo)
+          .then(() => {
+            this.cartService.clearCart();
+            console.log('A compra foi registrada com sucesso!');
+            this.router.navigate(['/tabs/tab3']);
+            this.presentSuccessAlert('A compra foi efectuada com sucesso!');
+          })
+          .catch((error) => {
+            console.error('Erro ao registrar a compra:', error);
+          });
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async presentSuccessAlert(msg: string) {
+    const alert = await this.alertController.create({
+      header: 'Sucesso!',
+      message: msg,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 }
