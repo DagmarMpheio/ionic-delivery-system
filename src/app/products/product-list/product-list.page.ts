@@ -4,6 +4,7 @@ import { ProductService } from '../../shared/product.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DiscountModalPage } from '../discount-modal/discount-modal.page';
 import { DiscountService } from '../../shared/discount.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -13,16 +14,21 @@ import { DiscountService } from '../../shared/discount.service';
 export class ProductListPage implements OnInit {
   products: Product[] = [];
   desconto: number;
+  supermarketId: any;
 
   constructor(
     public productService: ProductService,
     private alertController: AlertController,
     private modalController: ModalController,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    this.productService.getProductList().subscribe((res) => {
+    // Obtenha o parâmetro da rota
+    this.supermarketId = this.route.snapshot.paramMap.get('supermarketId');
+
+    this.productService.getProductsByMarket(this.supermarketId).subscribe((res) => {
       this.products = res.map((t) => {
         return {
           id: t.payload.doc.id,

@@ -33,7 +33,7 @@ export class AddProductPage implements OnInit {
       imageFile: [null, Validators.required],
     });
 
-    // Carregue a lista de supermercados
+    // Obter a lista de supermercados
     this.productService.getSupermarketsList().subscribe((data) => {
       this.supermercados = data.map((e) => {
         return {

@@ -47,6 +47,13 @@ export class ProductService {
     return this.ngFirestore.collection('produtos').snapshotChanges();
   }
 
+  // Obter produtos por supermercado
+  getProductsByMarket(marketId:string) {
+    return this.ngFirestore
+      .collection('produtos', (ref) => ref.where('supermercadoId', '==', marketId))
+      .snapshotChanges();
+  }
+
   // Actualizar produto
   updateProduct(id: any, product: Product) {
     this.ngFirestore

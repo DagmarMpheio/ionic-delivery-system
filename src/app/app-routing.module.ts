@@ -31,7 +31,7 @@ const routes: Routes = [
     loadChildren: () => import('./products/add-product/add-product.module').then( m => m.AddProductPageModule)
   },
   {
-    path: 'product-list',
+    path: 'product-list/:supermarketId',
     loadChildren: () => import('./products/product-list/product-list.module').then( m => m.ProductListPageModule)
   },
   {
@@ -41,6 +41,10 @@ const routes: Routes = [
   {
     path: 'discount-modal',
     loadChildren: () => import('./products/discount-modal/discount-modal.module').then( m => m.DiscountModalPageModule)
+  },
+  {
+    path: 'shops',
+    loadChildren: () => import('./products/shops/shops.module').then( m => m.ShopsPageModule)
   }
 ];
 @NgModule({
