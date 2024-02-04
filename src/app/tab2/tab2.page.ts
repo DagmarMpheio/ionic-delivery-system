@@ -60,7 +60,7 @@ export class Tab2Page {
       component: CheckoutModalPage,
     });
 
-    // Obtain the UID from localStorage
+    // Obter o UID no localStorage
     const userUID = JSON.parse(localStorage.getItem('user') || '{}').uid;
 
     modal.onDidDismiss().then((data) => {
