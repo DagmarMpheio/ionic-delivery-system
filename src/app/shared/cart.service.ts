@@ -15,7 +15,16 @@ export class CartService {
   total: number = 0; // Total do valor monetário
   totalItems: number = 0; // Total de itens no carrinho
 
-  constructor(private firestore: AngularFirestore) {}
+  private readonly localStorageKey = 'cartItems'; // Chave para armazenar dados no localStorage
+
+  constructor(private firestore: AngularFirestore) {
+    // Recupera os itens do carrinho do localStorage ao iniciar o serviço
+    const storedCartItems = localStorage.getItem(this.localStorageKey);
+    if (storedCartItems) {
+      this.cartItemsSubject.next(JSON.parse(storedCartItems));
+      this.calculateTotal(JSON.parse(storedCartItems));
+    }
+  }
 
   getCartItems(): Cart[] {
     return this.cartItemsSubject.getValue();
@@ -54,8 +63,9 @@ export class CartService {
       currentItems.push(cartItem);
     }
 
-    this.calculateTotal(currentItems);
     this.cartItemsSubject.next([...currentItems]);
+    this.calculateTotal(currentItems);
+    this.updateLocalStorage(currentItems);
   }
 
   removeFromCart(productId: string): void {
@@ -76,8 +86,8 @@ export class CartService {
         currentItems.splice(existingItemIndex, 1);
       }
 
-      this.calculateTotal(currentItems);
       this.cartItemsSubject.next([...currentItems]);
+      this.updateLocalStorage(currentItems);
     }
   }
 
@@ -89,6 +99,9 @@ export class CartService {
 
   clearCart(): void {
     this.cartItemsSubject.next([]);
+    this.total = 0;
+    this.totalItems = 0;
+    localStorage.removeItem(this.localStorageKey);
   }
 
   // Método para calcular o total do carrinho
@@ -103,5 +116,10 @@ export class CartService {
       .collection('produtos')
       .doc<Product>(productId)
       .valueChanges();
+  }
+
+  //actualizar os dados os localStorage
+  private updateLocalStorage(cartItems: Cart[]): void {
+    localStorage.setItem(this.localStorageKey, JSON.stringify(cartItems));
   }
 }
