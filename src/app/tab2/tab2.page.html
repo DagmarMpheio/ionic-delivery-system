@@ -35,8 +35,19 @@
     <div class="empty-cart-message">Seu carrinho está vazio.</div>
   </ng-template>
 
-  <ion-button (click)="clearCart()" expand="full" *ngIf="cartItems.length > 0;">Limpar Carrinho</ion-button>
-  <!-- Botão para Continuar Compra -->
-  <ion-button (click)="continuarCompra()" expand="full" *ngIf="cartItems.length > 0;">Continuar Compra</ion-button>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="clearCart()" expand="full" *ngIf="cartItems.length > 0;">
+          <ion-icon name="trash-outline"></ion-icon> Limpar Carrinho
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <!-- Botão para Continuar Compra -->
+        <ion-button (click)="continuarCompra()" expand="full" *ngIf="cartItems.length > 0;">
+          <ion-icon name="arrow-forward-outline"></ion-icon> Continuar Compra
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -53,14 +53,13 @@ export class CartService {
       existingItem.subtotal = existingItem.quantity * existingItem.price!;
     } else {
       // Se o item não estiver no carrinho, adiciona um novo item
-      const cartItem: Cart = {
-        quantity: 1,
-        product: product,
-        productId: product.$key,
-        price: product.preco,
-        subtotal: product.preco,
-      };
-      currentItems.push(cartItem);
+      const cartItem = new Cart();
+      cartItem.quantity = 1;
+      cartItem.product = product;
+      cartItem.price = product.preco;
+      cartItem.subtotal = product.preco;
+
+      currentItems.push(cartItem.toJson());
     }
 
     this.cartItemsSubject.next([...currentItems]);
@@ -71,7 +70,7 @@ export class CartService {
   removeFromCart(productId: string): void {
     const currentItems = this.getCartItems();
     const existingItemIndex = currentItems.findIndex(
-      (item) => item.productId === productId
+      (item) => item.product.$key === productId
     );
 
     if (existingItemIndex !== -1) {
@@ -87,6 +86,7 @@ export class CartService {
       }
 
       this.cartItemsSubject.next([...currentItems]);
+      this.calculateTotal(currentItems);
       this.updateLocalStorage(currentItems);
     }
   }

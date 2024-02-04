@@ -22,12 +22,13 @@
 
       <ion-card-content>
         {{ product.descricao }}
-
-        <!-- Botão para adicionar ao carrinho -->
-        <ion-button (click)="addToCart(product)" fill="clear" color="primary" size="large">
-          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
-        </ion-button>
       </ion-card-content>
+
+      <!-- Botão para adicionar ao carrinho -->
+      <ion-button (click)="addToCart(product)" fill="clear" color="primary" size="large">
+        <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      
     </ion-card>  
   <!-- <div *ngIf="!(productsWithSupermarkets$ | async)">Loading...</div> -->
 </ion-content>
