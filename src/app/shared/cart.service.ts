@@ -1,0 +1,107 @@
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Cart } from 'src/shared/cart';
+import { Product } from 'src/shared/product';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CartService {
+  private cartItemsSubject: BehaviorSubject<Cart[]> = new BehaviorSubject<
+    Cart[]
+  >([]);
+  cartItems$: Observable<Cart[]> = this.cartItemsSubject.asObservable();
+  total: number = 0; // Total do valor monetário
+  totalItems: number = 0; // Total de itens no carrinho
+
+  constructor(private firestore: AngularFirestore) {}
+
+  getCartItems(): Cart[] {
+    return this.cartItemsSubject.getValue();
+  }
+
+  /* addToCart(product: Product): void {
+    const currentItems = this.getCartItems();
+    const cartItem: Cart = {
+      quantity: 1,
+      product: product,
+      productId: product.$key,
+      price: product.preco,
+      subtotal: product.preco,
+    };
+    const updatedItems = [...currentItems, cartItem];
+    this.cartItemsSubject.next(updatedItems);
+  } */
+
+  addToCart(product: Product): void {
+    const currentItems = this.getCartItems();
+    const existingItem = currentItems.find((item) => item.product === product);
+
+    if (existingItem) {
+      // Se o item já estiver no carrinho, incrementa a quantidade
+      existingItem.quantity += 1;
+      existingItem.subtotal = existingItem.quantity * existingItem.price!;
+    } else {
+      // Se o item não estiver no carrinho, adiciona um novo item
+      const cartItem: Cart = {
+        quantity: 1,
+        product: product,
+        productId: product.$key,
+        price: product.preco,
+        subtotal: product.preco,
+      };
+      currentItems.push(cartItem);
+    }
+
+    this.calculateTotal(currentItems);
+    this.cartItemsSubject.next([...currentItems]);
+  }
+
+  removeFromCart(productId: string): void {
+    const currentItems = this.getCartItems();
+    const existingItemIndex = currentItems.findIndex(
+      (item) => item.productId === productId
+    );
+
+    if (existingItemIndex !== -1) {
+      // Se o item já estiver no carrinho e a quantidade for maior que 1, decrementa a quantidade
+      if (currentItems[existingItemIndex].quantity > 1) {
+        currentItems[existingItemIndex].quantity -= 1;
+        currentItems[existingItemIndex].subtotal =
+          currentItems[existingItemIndex].quantity *
+          currentItems[existingItemIndex].price!;
+      } else {
+        // Se a quantidade for 1, remove completamente o item
+        currentItems.splice(existingItemIndex, 1);
+      }
+
+      this.calculateTotal(currentItems);
+      this.cartItemsSubject.next([...currentItems]);
+    }
+  }
+
+  /* removeFromCart(cartItemId: string): void {
+    const currentItems = this.getCartItems();
+    const updatedItems = currentItems.filter((item) => item.id !== cartItemId);
+    this.cartItemsSubject.next(updatedItems);
+  } */
+
+  clearCart(): void {
+    this.cartItemsSubject.next([]);
+  }
+
+  // Método para calcular o total do carrinho
+  private calculateTotal(items: Cart[]): void {
+    this.total = items.reduce((acc, item) => acc + item.subtotal, 0);
+    this.totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
+  // Método para buscar um produto pelo ID
+  getProductById(productId: string): Observable<Product | undefined> {
+    return this.firestore
+      .collection('produtos')
+      .doc<Product>(productId)
+      .valueChanges();
+  }
+}

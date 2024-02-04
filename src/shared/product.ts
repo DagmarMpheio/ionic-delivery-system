@@ -1,3 +1,5 @@
+import { Supermarket } from './supermarket';
+
 export interface Product {
   $key: string;
   nome: string;
@@ -7,4 +9,9 @@ export interface Product {
   desconto?: number;
   imgUrl: string;
   supermercadoId: string;
+}
+
+export interface ProductWithSupermarket {
+  product: Product;
+  supermarket: Supermarket;
 }

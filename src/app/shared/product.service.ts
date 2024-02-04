@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../../shared/product';
+import { Product, ProductWithSupermarket } from '../../shared/product';
+import { Supermarket } from '../../shared/supermarket';
 
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { finalize, map, switchMap, catchError, tap } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -42,15 +44,80 @@ export class ProductService {
     return this.ngFirestore.collection('produtos').doc(id).valueChanges();
   }
 
-  // Obter List de produtos
+  // Retorna um Observable de DocumentChangeAction<Product>[],
+  // onde cada acção representa uma alteração (adicionar, modificar e excluír) em um documento na coleção 'produtos'.
   getProductList() {
     return this.ngFirestore.collection('produtos').snapshotChanges();
   }
 
-  // Obter produtos por supermercado
-  getProductsByMarket(marketId:string) {
+  // Retorna um Observable de Product[], trazendo os dados actuais da coleção 'produtos'.
+  // Não fornece informações detalhadas sobre alterações específicas nos documentos.
+  getProducts(): Observable<Product[]> {
     return this.ngFirestore
-      .collection('produtos', (ref) => ref.where('supermercadoId', '==', marketId))
+      .collection('products')
+      .snapshotChanges()
+      .pipe(
+        map((res) => {
+          return res.map((t) => {
+            return {
+              id: t.payload.doc.id,
+              ...(t.payload.doc.data() as Product),
+            };
+          });
+        }),
+        catchError((error) => {
+          console.error('Error fetching products:', error);
+          throw error;
+        })
+      );
+  }
+
+  // Obter List de produtos com detalhes do supermercado
+  // Assuming ProductWithSupermarket type has properties like 'product' and 'supermarket'
+  getProductsWithSupermarkets(): Observable<ProductWithSupermarket[]> {
+    return forkJoin([this.getProducts(), this.getSupermarkets()]).pipe(
+      tap(([products, supermarkets]) => {
+        console.log('Products:', products);
+        console.log('Supermarkets:', supermarkets);
+      }),
+      map(([products, supermarkets]) => {
+        return products.map((product) => {
+          const matchingSupermarket = supermarkets.find(
+            (supermarket) => supermarket.$key === product.supermercadoId
+          );
+
+          return {
+            product,
+            supermarket: matchingSupermarket || ({} as Supermarket),
+          } as ProductWithSupermarket;
+        });
+      }),
+      catchError((error) => {
+        console.error('Error combining products and supermarkets:', error);
+        throw error;
+      })
+    );
+  }
+
+  /* getProductsWithSupermarkets(): Observable<any[]> {
+    return this.getProducts().pipe(
+      switchMap(products => {
+        const supermarketObservables: Observable<any>[] = products.map(product => {
+          return this.ngFirestore.doc<Supermarket>(`supermercados/${product.supermercadoId}`).valueChanges().pipe(
+            map(supermarket => ({ ...product, supermarket }))
+          );
+        });
+        return forkJoin(supermarketObservables);
+      })
+    );
+  } */
+
+  // Obter produtos por supermercado
+  getProductsByMarket(marketId: string) {
+    return this.ngFirestore
+      .collection('produtos', (ref) =>
+        ref.where('supermercadoId', '==', marketId)
+      )
       .snapshotChanges();
   }
 
@@ -109,6 +176,26 @@ export class ProductService {
   //Método para obter a lista de supermercados
   getSupermarketsList() {
     return this.ngFirestore.collection('supermercados').snapshotChanges();
+  }
+
+  getSupermarkets(): Observable<Supermarket[]> {
+    return this.ngFirestore
+      .collection('supermarkets')
+      .snapshotChanges()
+      .pipe(
+        map((res) => {
+          return res.map((t) => {
+            return {
+              id: t.payload.doc.id,
+              ...(t.payload.doc.data() as Supermarket),
+            };
+          });
+        }),
+        catchError((error) => {
+          console.error('Error fetching supermarkets:', error);
+          throw error;
+        })
+      );
   }
 
   // Marcar um produto como em promoção
