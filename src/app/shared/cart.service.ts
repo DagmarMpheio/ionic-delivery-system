@@ -106,7 +106,7 @@ export class CartService {
 
   // Método para calcular o total do carrinho
   private calculateTotal(items: Cart[]): void {
-    this.total = items.reduce((acc, item) => acc + item.subtotal, 0);
+    this.total = items.reduce((acc, item) => acc + item.subtotal, 0) + 500; //taxa fixa de 500kz
     this.totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
   }
 
