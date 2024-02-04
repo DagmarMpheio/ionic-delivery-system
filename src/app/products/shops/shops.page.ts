@@ -12,6 +12,8 @@ export class ShopsPage implements OnInit {
   supermercados: Supermarket[];
 
   constructor(public productService: ProductService, private router: Router) {}
+  
+  loading = true;
 
   ngOnInit() {
     // Obter a lista de supermercados
@@ -22,6 +24,7 @@ export class ShopsPage implements OnInit {
           ...(e.payload.doc.data() as Supermarket),
         };
       });
+      this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
     });
   }
 

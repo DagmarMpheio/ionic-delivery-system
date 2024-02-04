@@ -7,6 +7,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div *ngIf="!loading">
     <ion-card *ngFor="let product of products">  
       <ion-img [src]="product.imgUrl" [alt]="product.nome" class="product-image"></ion-img>
       <ion-card-header>
@@ -30,5 +31,11 @@
       </ion-button>
       
     </ion-card>  
+  </div>
+
+  <div class="loading-container">
+    <ion-spinner *ngIf="loading"></ion-spinner>
+    <p class="loading-message">Carregando...</p>
+  </div>
   <!-- <div *ngIf="!(productsWithSupermarkets$ | async)">Loading...</div> -->
 </ion-content>

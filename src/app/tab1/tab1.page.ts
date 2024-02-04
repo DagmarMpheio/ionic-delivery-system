@@ -22,6 +22,8 @@ export class Tab1Page implements OnInit {
     private cartService: CartService,
   ) {}
 
+  loading = true;
+
   ngOnInit() {
     this.productsWithSupermarkets$ =
       this.productService.getProductsWithSupermarkets();
@@ -30,9 +32,11 @@ export class Tab1Page implements OnInit {
     this.productsWithSupermarkets$.subscribe(
       (data) => {
         console.log('Emitted data:', data);
+        this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
       },
       (error) => {
         console.error('Error fetching products with supermarkets:', error);
+        this.loading = false; // Marcar como carregado mesmo em caso de erro
       }
     );
 
@@ -43,6 +47,7 @@ export class Tab1Page implements OnInit {
           ...(t.payload.doc.data() as Product),
         };
       });
+      this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
     });
 
     //carrinho

@@ -24,6 +24,8 @@ export class ProductListPage implements OnInit {
     private route: ActivatedRoute,
   ) {}
 
+  loading = true;
+
   ngOnInit() {
     // Obtenha o parâmetro da rota
     this.supermarketId = this.route.snapshot.paramMap.get('supermarketId');
@@ -35,6 +37,7 @@ export class ProductListPage implements OnInit {
           ...(t.payload.doc.data() as Product),
         };
       });
+      this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
     });
   }
 
