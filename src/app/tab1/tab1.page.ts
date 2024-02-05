@@ -4,6 +4,8 @@ import { ProductService } from '../shared/product.service';
 import { Observable } from 'rxjs';
 import { CartService } from '../shared/cart.service';
 import { Cart } from 'src/shared/cart';
+import { AlertController } from '@ionic/angular';
+import { AuthenticationService } from 'src/shared/authentication-service';
 
 @Component({
   selector: 'app-tab1',
@@ -20,6 +22,8 @@ export class Tab1Page implements OnInit {
   constructor(
     public productService: ProductService,
     private cartService: CartService,
+    private alertController: AlertController,
+    public authService: AuthenticationService
   ) {}
 
   loading = true;
@@ -58,6 +62,26 @@ export class Tab1Page implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addToCart(product);
-    // Adicionar lógica adicional, se necessário
+  }
+
+  async confirmSignOut() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Saída',
+      message: 'Tem certeza de que deseja sair?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Sair',
+          handler: () => {
+            this.authService.SignOut();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

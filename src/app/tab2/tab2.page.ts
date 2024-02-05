@@ -6,6 +6,7 @@ import { Order } from 'src/shared/order';
 import { ModalController, AlertController } from '@ionic/angular';
 import { CheckoutModalPage } from '../products/checkout-modal/checkout-modal.page';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/shared/authentication-service';
 
 @Component({
   selector: 'app-tab2',
@@ -20,8 +21,10 @@ export class Tab2Page {
     private orderService: OrdersService,
     private modalController: ModalController,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    public authService: AuthenticationService
   ) {}
+ 
 
   ngOnInit() {
     this.cartService.cartItems$.subscribe((items) => {
@@ -106,6 +109,27 @@ export class Tab2Page {
       header: 'Sucesso!',
       message: msg,
       buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
+  async confirmSignOut() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Saída',
+      message: 'Tem certeza de que deseja sair?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Sair',
+          handler: () => {
+            this.authService.SignOut();
+          }
+        }
+      ]
     });
 
     await alert.present();
