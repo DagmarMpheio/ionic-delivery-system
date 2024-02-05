@@ -15,9 +15,8 @@ import { AuthenticationService } from 'src/shared/authentication-service';
 export class Tab1Page implements OnInit {
   products: Product[] = [];
   cartItems: Cart[] = [];
-  productsWithSupermarkets$: Observable<ProductWithSupermarket[]>;
-
-  private readonly localStorageKey = 'cartItems'; // Chave para armazenar dados no localStorage
+  supermercados: any[] = [];
+  productsWithSupermarkets: ProductWithSupermarket[] = [];
 
   constructor(
     public productService: ProductService,
@@ -29,20 +28,14 @@ export class Tab1Page implements OnInit {
   loading = true;
 
   ngOnInit() {
-    this.productsWithSupermarkets$ =
-      this.productService.getProductsWithSupermarkets();
-
-    // Subscribe to the observable to log emitted data
-    this.productsWithSupermarkets$.subscribe(
-      (data) => {
-        console.log('Emitted data:', data);
-        this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
-      },
-      (error) => {
-        console.error('Error fetching products with supermarkets:', error);
-        this.loading = false; // Marcar como carregado mesmo em caso de erro
-      }
-    );
+    this.productService.getProductsWithSupermarkets().subscribe((result) => {
+      this.productsWithSupermarkets = result;
+      console.log('supermercados2: ', this.productsWithSupermarkets);
+    });
+    console.log('supermercados2: ', this.productsWithSupermarkets);
+    /* this.productService.getProductWithMarket().subscribe((supermercados) => {
+      console.log('supermercados: ', this.supermercados);
+    }); */
 
     this.productService.getProductList().subscribe((res) => {
       this.products = res.map((t) => {
@@ -51,7 +44,7 @@ export class Tab1Page implements OnInit {
           ...(t.payload.doc.data() as Product),
         };
       });
-       this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
+      this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
     });
 
     //carrinho
@@ -71,15 +64,15 @@ export class Tab1Page implements OnInit {
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Sair',
           handler: () => {
             this.authService.SignOut();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

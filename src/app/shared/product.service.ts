@@ -75,17 +75,17 @@ export class ProductService {
   // Obter List de produtos com detalhes do supermercado
   // Assuming ProductWithSupermarket type has properties like 'product' and 'supermarket'
   getProductsWithSupermarkets(): Observable<ProductWithSupermarket[]> {
-    return forkJoin([this.getProducts(), this.getSupermarkets()]).pipe(
-      tap(([products, supermarkets]) => {
-        console.log('Products:', products);
+    return forkJoin([this.getSupermarkets(), this.getProducts()]).pipe(
+      tap(([supermarkets, products]) => {
         console.log('Supermarkets:', supermarkets);
+        console.log('Products:', products);
       }),
-      map(([products, supermarkets]) => {
+      map(([supermarkets, products]) => {
         return products.map((product) => {
           const matchingSupermarket = supermarkets.find(
             (supermarket) => supermarket.$key === product.supermercadoId
           );
-
+  
           return {
             product,
             supermarket: matchingSupermarket || ({} as Supermarket),
@@ -93,25 +93,33 @@ export class ProductService {
         });
       }),
       catchError((error) => {
-        console.error('Error combining products and supermarkets:', error);
+        console.error('Error combining supermarkets and products:', error);
         throw error;
       })
     );
   }
+  
 
   getProductWithMarket() {
-    const item: AngularFirestoreCollection = this.ngFirestore.collection(`produtos`, ref => ref.orderBy('nome'));
-    return item.valueChanges().pipe(switchMap(arr => {
-      const supermercadoObservable = arr.map((supermercado:any) => this.ngFirestore.doc(`supermercados/${supermercado.id}`).valueChanges().pipe(first()));
-      return combineLatest(...supermercadoObservable).pipe(map((...supermercados:any) => {
-        arr.forEach((supermercadoo, index) => {
-          supermercadoo['id'] = supermercados[0][index]['id'];
-        });
-        return arr;
+    const supermercadoCollection: AngularFirestoreCollection = this.ngFirestore.collection(`supermercados`);
+    
+    return supermercadoCollection.valueChanges().pipe(
+      switchMap(supermercados => {
+        const produtosObservable = supermercados.map((supermercado: any) => 
+          this.ngFirestore.collection(`produtos`, ref => ref.where('supermercadoId', '==', supermercado.id).orderBy('nome')).valueChanges().pipe(first())
+        );
+  
+        return combineLatest(...produtosObservable).pipe(
+          map((...produtos: any) => {
+            supermercados.forEach((supermercado, index) => {
+              supermercado['produtos'] = produtos[index];
+            });
+            return supermercados;
+          })
+        );
       })
-      );
-    }));
-  }
+    );
+  }  
 
   /* getProductsWithSupermarkets(): Observable<any[]> {
     return this.getProducts().pipe(
