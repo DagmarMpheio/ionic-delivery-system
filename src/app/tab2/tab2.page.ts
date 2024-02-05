@@ -24,12 +24,17 @@ export class Tab2Page {
     private router: Router,
     public authService: AuthenticationService
   ) {}
- 
+
+  userData:any;
 
   ngOnInit() {
     this.cartService.cartItems$.subscribe((items) => {
       this.cartItems = items;
     });
+
+    // Obter o UID no localStorage
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userData=user;
   }
 
   async addToCart(productId: string): Promise<void> {
@@ -85,7 +90,7 @@ export class Tab2Page {
           compraInfo.referenciaBancaria = '';
         }
 
-        console.log("compraInfo: ",compraInfo);
+        console.log('compraInfo: ', compraInfo);
 
         this.orderService
           .continuarComprar(compraInfo)
@@ -121,15 +126,15 @@ export class Tab2Page {
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Sair',
           handler: () => {
             this.authService.SignOut();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

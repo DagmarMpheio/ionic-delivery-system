@@ -124,8 +124,8 @@ export class AuthenticationService {
   // Retorna verdadeiro se o usuario esta autenticado
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return user !== null && user.emailVerified !== false ? true : false;
-  }
+    return user !== null;
+  }  
 
   // Retornar verdadeiro se o email do usuario foi verificado
   get isEmailVerified(): boolean {

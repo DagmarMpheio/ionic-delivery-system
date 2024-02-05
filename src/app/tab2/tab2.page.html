@@ -57,10 +57,18 @@
           <ion-icon name="trash-outline"></ion-icon> Limpar Carrinho
         </ion-button>
       </ion-col>
-      <ion-col>
-        <!-- Botão para Continuar Compra -->
+      <ion-col *ngIf="userData.email">
+        <!-- Botão para Continuar Compra se o usuario esta autenticado -->
         <ion-button (click)="continuarCompra()" expand="full" *ngIf="cartItems.length > 0;">
           <ion-icon name="arrow-forward-outline"></ion-icon> Continuar Compra
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <!-- Botão para Fazer login -->
+    <ion-row *ngIf="!userData.email">
+      <ion-col>
+        <ion-button [routerLink]="['/login']"  expand="full" color="warning">
+          Fazer login para continuar com a compra
         </ion-button>
       </ion-col>
     </ion-row>

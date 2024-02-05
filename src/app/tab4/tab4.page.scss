@@ -12,4 +12,14 @@
     margin-bottom: 20px;
   }
 
+
+  .empty-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Alteração: Usar 100vh para altura total da viewport */
+    color: #555; /* Cor do texto */
+    font-size: 25px; /* Tamanho da fonte */
+    text-align: center; /* Alinhamento do texto */
+  }
   
