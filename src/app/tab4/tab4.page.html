@@ -1,5 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-avatar class="circular-avatar">
+      <ion-img src="assets/img/app-logo.png" class="app-logo"></ion-img>
+    </ion-avatar>
+    
     <ion-title>Perfil</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="confirmSignOut()" fill="clear">
@@ -16,6 +20,10 @@
     </ion-avatar>
     <h2>{{ userData.displayName }}</h2>
     <p>{{ userData.email }}</p>
+
+    <ion-button [routerLink]="['/update-profile']" expand="block" color="secondary" class="edit-button">
+      <ion-icon name="create"></ion-icon> Editar Perfil
+    </ion-button>
   </div>
   <div class="empty-profile" *ngIf="!userData.email">
     <ion-grid>

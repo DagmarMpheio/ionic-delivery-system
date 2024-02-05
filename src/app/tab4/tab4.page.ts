@@ -17,7 +17,7 @@ export class Tab4Page implements OnInit {
   userData:any;
 
   ngOnInit() {
-    // Obter o UID no localStorage
+    // Obter o user no localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userData=user;
   }

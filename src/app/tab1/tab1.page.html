@@ -1,5 +1,9 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
+    <ion-avatar class="circular-avatar">
+      <ion-img src="assets/img/app-logo.png" class="app-logo"></ion-img>
+    </ion-avatar>
+
     <ion-title>
       Produtos
     </ion-title>
@@ -13,35 +17,41 @@
 
 <ion-content [fullscreen]="true">
   <div *ngIf="!loading">
-    <ion-card *ngFor="let product of products">
-      <!-- Etiqueta de promoção -->
-      <ion-badge *ngIf="product.emPromocao" class="promotion-badge">
-        {{ product.desconto }}%
-      </ion-badge>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" *ngFor="let product of products" class="product-col">
+          <ion-card class="product-card">
+            <!-- Etiqueta de promoção -->
+            <ion-badge *ngIf="product.emPromocao" class="promotion-badge">
+              {{ product.desconto }}%
+            </ion-badge>
 
-      <ion-img [src]="product.imgUrl" [alt]="product.nome" class="product-image"></ion-img>
-      <ion-card-header>
-        <ion-card-title>{{ product.nome }}</ion-card-title>
-        <!-- Preco normal -->
-        <ion-card-subtitle *ngIf="!product.emPromocao" class="larger-text">{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
-        <!-- Preco com promocao -->
-        <ion-card-subtitle *ngIf="product.emPromocao" class="larger-text">
-          <del>{{ product.preco | currency:'KZ ' }}</del>
-          <br>
-          {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) | currency:'KZ ' }}
-        </ion-card-subtitle>
-      </ion-card-header>
+            <ion-img [src]="product.imgUrl" [alt]="product.nome" class="product-image"></ion-img>
+            <ion-card-header>
+              <ion-card-title class="product-title">{{ product.nome }}</ion-card-title>
+              <!-- Preco normal -->
+              <ion-card-subtitle *ngIf="!product.emPromocao" class="larger-text">{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
+              <!-- Preco com promocao -->
+              <ion-card-subtitle *ngIf="product.emPromocao" class="larger-text">
+                <del>{{ product.preco | currency:'KZ ' }}</del>
+                <br>
+                <p class="promotion-price">{{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) | currency:'KZ ' }}</p>
+              </ion-card-subtitle>
+            </ion-card-header>
 
-      <ion-card-content>
-        {{ product.descricao }}
-      </ion-card-content>
+            <ion-card-content></ion-card-content>          
+          </ion-card>
 
-      <!-- Botão para adicionar ao carrinho -->
-      <ion-button (click)="addToCart(product)" fill="clear" color="primary" size="large">
-        <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      
-    </ion-card>  
+          <ion-row>
+            <!-- Botão para adicionar ao carrinho -->
+            <ion-button (click)="addToCart(product)" fill="clear" color="primary" class="cart-button">
+              <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-row>
+
+        </ion-col>  
+      </ion-row>
+    </ion-grid>
   </div>
 
   <div class="loading-container" *ngIf="loading">

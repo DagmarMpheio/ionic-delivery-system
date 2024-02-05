@@ -1,8 +1,32 @@
+.app-logo {
+  max-height: 100%;
+  max-width: 100%;
+  margin-right: 10px;
+}
+
+.circular-avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.product-card {
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.product-title {
+  font-size: 1.2em; /* Tamanho do texto do nome do produto */
+  margin-top: 5px; /* Adicione algum espaço entre a imagem e o título */
+  display: block; /* Garante que ion-text funcione corretamente */
+}
+
 .product-image {
-  width: 100%;
-  height: 150px;
-  margin: 0 auto;
-  display: block;
+  min-height: 100px; /* Altura mínima da imagem */
+  max-height: 100%; /* Ajustar a altura máxima da imagem */
+  object-fit: cover; /* Evitar que a imagem seja distorcida */
 }
 
 .loading-container {
@@ -16,15 +40,15 @@
 .loading-message {
   margin-top: 10px;
   font-style: italic;
-  color: #666;
+  color: #999;
 }
 
 .promotion-badge {
   position: absolute;
   top: 5px;
   left: 5px;
-  background-color: red;
-  color: white;
+  background-color: #ff9800;
+  color: fff;
   padding: 5px;
   border-radius: 5px;
   font-size: 18px;
@@ -32,6 +56,26 @@
 }
 
 .larger-text {
-  font-size: 16px;
+  font-size: 1em;
 }
 
+.product-row {
+  margin-bottom: 5px;
+}
+
+.product-col {
+  padding: 0 2px; /* Adicionar algum espaçamento entre as colunas */
+}
+
+.cart-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.promotion-price {
+  color: #ff9800;
+  font-weight: bold;
+}

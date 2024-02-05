@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab4"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Editar Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item>
+    <ion-label position="stacked">Nome do Usuário</ion-label>
+    <ion-input [(ngModel)]="userData.displayName" placeholder="Seu Nome"></ion-input>
+  </ion-item>
+
+  <!-- Botão para atualizar o perfil -->
+  <ion-button expand="full" (click)="updateProfile()">
+    <ion-icon name="save"></ion-icon> Atualizar Perfil
+  </ion-button>
+</ion-content>

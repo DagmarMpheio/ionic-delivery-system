@@ -1,25 +1,51 @@
 .profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 20px;
+}
 
+.profile-avatar {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 20px;
+}
 
-  .empty-profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Alteração: Usar 100vh para altura total da viewport */
-    color: #555; /* Cor do texto */
-    font-size: 25px; /* Tamanho da fonte */
-    text-align: center; /* Alinhamento do texto */
-  }
-  
+h2 {
+  margin-top: 10px;
+}
+
+p {
+  color: #888;
+}
+
+.empty-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+ion-button {
+  width: 80%;
+  max-width: 200px;
+}
+.app-logo {
+  max-height: 100%;
+  max-width: 100%;
+  margin-right: 10px;
+}
+
+.circular-avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}

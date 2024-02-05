@@ -57,6 +57,10 @@ const routes: Routes = [
     path: 'checkout-modal',
     loadChildren: () => import('./products/checkout-modal/checkout-modal.module').then( m => m.CheckoutModalPageModule)
   },
+  {
+    path: 'update-profile',
+    loadChildren: () => import('./update-profile/update-profile.module').then( m => m.UpdateProfilePageModule)
+  },
 ];
 @NgModule({
   imports: [

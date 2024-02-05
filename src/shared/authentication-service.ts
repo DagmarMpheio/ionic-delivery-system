@@ -125,7 +125,7 @@ export class AuthenticationService {
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     return user !== null;
-  }  
+  }
 
   // Retornar verdadeiro se o email do usuario foi verificado
   get isEmailVerified(): boolean {
@@ -209,30 +209,39 @@ export class AuthenticationService {
       this.router.navigate(['login']);
     });
   }
-  // Actualizar o perfil do usuário
-  updateUserProfile(displayName: string, photoURL: string): Promise<void> {
-    return (
-      this.ngFireAuth.currentUser
-        /* .then((user) => {
+  // Método para atualizar o perfil do usuário pelo ID
+  updateUserProfile(userId: string, displayName: string): Promise<void> {
+    const userRef: AngularFirestoreDocument<any> = this.afStore.doc(
+      `users/${userId}`
+    );
+
+    const updatedData: any = {
+      displayName: displayName,
+    };
+
+    return userRef.set(updatedData, { merge: true });
+  }
+
+  /* updateUserProfile(displayName: string) {
+    return this.ngFireAuth.currentUser
+      .then((user: any) => {
         if (user) {
           // Actualizar o perfil do usuário com os novos dados
           return user.updateProfile({
             displayName,
-            photoURL,
           });
         }
-      }) */
-        .then(() => {
-          // Actualizar os dados no Firestore
-          return this.updateUserData({ displayName, photoURL });
-        })
-        .catch((error) => {
-          // Lidar com erros durante a actualização do perfil
-          console.error(error);
-          throw error;
-        })
-    );
-  }
+      })
+      .then((user) => {
+        // Actualizar os dados no Firestore
+        return this.updateUserData(user);
+      })
+      .catch((error) => {
+        // Lidar com erros durante a actualização do perfil
+        console.error(error);
+        throw error;
+      });
+  } */
 
   // Método para obter dados do usuário pelo ID
   getUserDataByUserId(userId: string): Observable<User | undefined> {
