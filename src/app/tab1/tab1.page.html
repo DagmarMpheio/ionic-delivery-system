@@ -13,14 +13,20 @@
 
 <ion-content [fullscreen]="true">
   <div *ngIf="!loading">
-    <ion-card *ngFor="let product of products">  
+    <ion-card *ngFor="let product of products">
+      <!-- Etiqueta de promoção -->
+      <ion-badge *ngIf="product.emPromocao" class="promotion-badge">
+        {{ product.desconto }}%
+      </ion-badge>
+
       <ion-img [src]="product.imgUrl" [alt]="product.nome" class="product-image"></ion-img>
       <ion-card-header>
         <ion-card-title>{{ product.nome }}</ion-card-title>
         <!-- Preco normal -->
-        <ion-card-subtitle *ngIf="!product.emPromocao">{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
+        <ion-card-subtitle *ngIf="!product.emPromocao" class="larger-text">{{ product.preco | currency:'KZ ' }}</ion-card-subtitle>
         <!-- Preco com promocao -->
-        <ion-card-subtitle *ngIf="product.emPromocao"> Desconto: {{ product.desconto }}%
+        <ion-card-subtitle *ngIf="product.emPromocao" class="larger-text">
+          <del>{{ product.preco | currency:'KZ ' }}</del>
           <br>
           {{ productService.calculateDiscountedPrice(product.preco, product.desconto || 0) | currency:'KZ ' }}
         </ion-card-subtitle>
