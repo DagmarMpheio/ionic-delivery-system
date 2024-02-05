@@ -7,7 +7,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form>    
+  <form>   
+    <ion-avatar class="app-image">
+      <img src="assets/img/app-logo.png" alt="Logo da App" />
+    </ion-avatar>
+
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
       <ion-input type="email" #email required></ion-input>
@@ -21,5 +25,9 @@
       <ion-button type="submit" (click)="signUp(email, password)" expand="block">Registar</ion-button>
       </ion-col>
     </ion-row>
+
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/login']">Já tenho uma conta</ion-button>
+    </ion-buttons>
   </form>
 </ion-content>

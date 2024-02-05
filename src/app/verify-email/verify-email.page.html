@@ -8,6 +8,10 @@
 </ion-header>
 <ion-content>
   <ion-grid>
+    <ion-avatar class="app-image">
+      <img src="assets/img/app-logo.png" alt="Logo da App" />
+    </ion-avatar>
+
     <ion-row>
       <h2>Ionic Delivery System - Verifique o Seu Email</h2>
       <p>
@@ -17,5 +21,9 @@
         Reenviar Verificação de Email
       </ion-button>
     </ion-row>
+
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/login']">Já tenho uma conta</ion-button>
+    </ion-buttons>
   </ion-grid>
 </ion-content>
