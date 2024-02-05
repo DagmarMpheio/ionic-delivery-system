@@ -56,8 +56,21 @@ export class CartService {
       const cartItem = new Cart();
       cartItem.quantity = 1;
       cartItem.product = product;
-      cartItem.price = product.preco;
-      cartItem.subtotal = product.preco;
+
+      // Verifica se o produto está em promoção e calcula o preço correspondente
+      if (product.emPromocao) {
+        cartItem.price = this.calculateDiscountedPrice(
+          product.preco,
+          product.desconto || 0
+        );
+        cartItem.subtotal = this.calculateDiscountedPrice(
+          product.preco,
+          product.desconto || 0
+        );
+      } else {
+        cartItem.price = product.preco;
+        cartItem.subtotal = product.preco;
+      }
 
       currentItems.push(cartItem.toJson());
     }
@@ -121,5 +134,14 @@ export class CartService {
   //actualizar os dados os localStorage
   private updateLocalStorage(cartItems: Cart[]): void {
     localStorage.setItem(this.localStorageKey, JSON.stringify(cartItems));
+  }
+
+  // Método para calcular o preço com desconto
+  private calculateDiscountedPrice(
+    price: number,
+    discountPercentage: number
+  ): number {
+    const discountAmount = (discountPercentage / 100) * price;
+    return price - discountAmount;
   }
 }
