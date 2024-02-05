@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+    loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'password-reset',
@@ -28,23 +30,28 @@ const routes: Routes = [
   },
   {
     path: 'add-product',
-    loadChildren: () => import('./products/add-product/add-product.module').then( m => m.AddProductPageModule)
+    loadChildren: () => import('./products/add-product/add-product.module').then( m => m.AddProductPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'product-list/:supermarketId',
-    loadChildren: () => import('./products/product-list/product-list.module').then( m => m.ProductListPageModule)
+    loadChildren: () => import('./products/product-list/product-list.module').then( m => m.ProductListPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'update-product/:id',
-    loadChildren: () => import('./products/update-product/update-product.module').then( m => m.UpdateProductPageModule)
+    loadChildren: () => import('./products/update-product/update-product.module').then( m => m.UpdateProductPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'discount-modal',
-    loadChildren: () => import('./products/discount-modal/discount-modal.module').then( m => m.DiscountModalPageModule)
+    loadChildren: () => import('./products/discount-modal/discount-modal.module').then( m => m.DiscountModalPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'shops',
-    loadChildren: () => import('./products/shops/shops.module').then( m => m.ShopsPageModule)
+    loadChildren: () => import('./products/shops/shops.module').then( m => m.ShopsPageModule),
+    canActivate: [AdminGuard],
   },
   {
     path: 'checkout-modal',
