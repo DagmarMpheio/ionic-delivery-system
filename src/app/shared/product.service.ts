@@ -150,7 +150,7 @@ export class ProductService {
       .doc(id)
       .update(product)
       .then(() => {
-        this.router.navigate(['/product-list']);
+        this.router.navigate(['/product-list', product.supermercadoId]);
       })
       .catch((error) => console.log(error));
   }
