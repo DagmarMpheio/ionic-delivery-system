@@ -21,11 +21,6 @@
       <ion-label position="floating">Descrição</ion-label>
       <ion-input formControlName="descricao" type="text" required> </ion-input>
     </ion-item>
-    <ion-item>
-      <ion-select label="Supermercado" formControlName="supermercadoId" label-placement="floating">
-        <ion-select-option *ngFor="let supermercado of supermercados" [value]="supermercado.id">  {{ supermercado.nome }}</ion-select-option>
-      </ion-select>
-    </ion-item>
 
     <ion-item>
       <ion-label position="floating">Escolha uma Imagem</ion-label>

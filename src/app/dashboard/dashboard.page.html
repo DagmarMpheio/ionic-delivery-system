@@ -24,7 +24,16 @@
 
       <ion-card-content>
         <p>Seja bem-vindo à sua Dashboard.</p>
-        <a [routerLink]="['/shops']" expand="block">Clique aqui para ver os supermecados</a>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button [routerLink]="['/shops']" expand="block" color="primary">Supermecados</ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button [routerLink]="['/order-list']" expand="block" color="primary">Pedidos</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-card-content>
     </div>
   </ion-card>

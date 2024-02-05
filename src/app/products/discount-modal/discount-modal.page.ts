@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { DiscountService } from '../../shared/discount.service';
 
 @Component({
@@ -12,8 +12,11 @@ export class DiscountModalPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    private discountService: DiscountService
+    private discountService: DiscountService,
+    private alertController: AlertController
   ) {}
+
+  ngOnInit() {}
 
   // Fechar a modal sem aplicar desconto
   closeModal() {
@@ -26,8 +29,18 @@ export class DiscountModalPage implements OnInit {
       this.discountService.setDesconto(this.desconto);
       this.modalController.dismiss({ role: 'ok', desconto: this.desconto });
       //this.modalController.dismiss(this.desconto);
+    }else{
+      this.presentSuccessAlert();
     }
   }
 
-  ngOnInit() {}
+  async presentSuccessAlert() {
+    const alert = await this.alertController.create({
+      header: 'Sucesso!',
+      message: 'O valor de desconto deve ser maior que 0 e menor ou igual a 100 .',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
 }

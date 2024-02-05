@@ -29,7 +29,7 @@ const routes: Routes = [
     loadChildren: () => import('./password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
   },
   {
-    path: 'add-product',
+    path: 'add-product/:supermarketId',
     loadChildren: () => import('./products/add-product/add-product.module').then( m => m.AddProductPageModule),
     canActivate: [AdminGuard],
   },
@@ -60,6 +60,10 @@ const routes: Routes = [
   {
     path: 'update-profile',
     loadChildren: () => import('./update-profile/update-profile.module').then( m => m.UpdateProfilePageModule)
+  },
+  {
+    path: 'order-list',
+    loadChildren: () => import('./products/order-list/order-list.module').then( m => m.OrderListPageModule)
   },
 ];
 @NgModule({

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../shared/product.service';
 import { Supermarket } from '../../../shared/supermarket';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -14,22 +14,28 @@ export class AddProductPage implements OnInit {
   productForm: FormGroup;
   supermercados: Supermarket[];
   imageFile: File;
+  supermarketId: any;
 
   constructor(
     private productService: ProductService,
     public formBuilder: FormBuilder,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    // Obter o parâmetro da rota
+    this.supermarketId =
+      this.activatedRoute.snapshot.paramMap.get('supermarketId');
+
     this.productForm = this.formBuilder.group({
       nome: ['', Validators.required],
       preco: [0, [Validators.required, Validators.min(0)]],
       descricao: ['', Validators.required],
       emPromocao: [false],
       desconto: [0, [Validators.min(0), Validators.max(100)]],
-      supermercadoId: ['', Validators.required],
+      supermercadoId: [this.supermarketId],
       imageFile: [null, Validators.required],
     });
 
@@ -62,14 +68,12 @@ export class AddProductPage implements OnInit {
     if (!this.productForm.valid) {
       return false;
     } else {
-      var supermercadoId = this.productForm.value.supermercadoId;
-
       return this.productService
         .createProduct(this.productForm.value, this.imageFile)
         .then((res) => {
           console.log(res);
           this.productForm.reset();
-          this.router.navigate(['/product-list', supermercadoId]);
+          this.router.navigate(['/product-list', this.supermarketId]);
           this.presentSuccessAlert();
         })
         .catch((error) => console.log(error));

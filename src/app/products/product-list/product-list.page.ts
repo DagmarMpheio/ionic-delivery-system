@@ -27,7 +27,7 @@ export class ProductListPage implements OnInit {
   loading = true;
 
   ngOnInit() {
-    // Obtenha o parâmetro da rota
+    // Obter o parâmetro da rota
     this.supermarketId = this.route.snapshot.paramMap.get('supermarketId');
 
     this.productService.getProductsByMarket(this.supermarketId).subscribe((res) => {

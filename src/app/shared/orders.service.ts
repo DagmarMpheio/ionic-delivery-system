@@ -3,7 +3,7 @@ import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { Order } from 'src/shared/order';
 
 @Injectable({
@@ -31,15 +31,27 @@ export class OrdersService {
   }
 
   //obter todos os pedidos
-  getAllOrders(): Observable<Order[]> {
+ /*  getAllOrders(): Observable<Order[]> {
     return this.ordersCollection.valueChanges();
-  }
+  } */
 
+  getAllOrders(): Observable<Order[]> {
+    return this.ordersCollection.snapshotChanges().pipe(
+      map((actions) => {
+        return actions.map((a) => {
+          const data = a.payload.doc.data() as Order;
+          const id = a.payload.doc.id;
+          return { id, ...data } as unknown as Order;
+        });
+      })
+    );
+  }
+  
   //obter os pedidos do usuario autenticado
   getOrdersForAuthenticatedUser(): Observable<Order[]> {
     // Obter o UID no localStorage
     const userUID = JSON.parse(localStorage.getItem('user') || '{}').uid;
-  
+
     if (userUID) {
       return this.ngFirestore
         .collection<Order>('pedidos', (ref) =>
@@ -51,5 +63,32 @@ export class OrdersService {
       return of([]);
     }
   }
-  
+
+  aprovarPedido(orderId: string): Promise<void> {
+    const pedidoRef = this.ordersCollection.doc(orderId);
+
+    // Atualizar o status para 'Aprovado'
+    return pedidoRef
+      .update({ status: 'Aprovado' })
+      .then(() => {
+        console.log('Pedido aprovado com sucesso!');
+      })
+      .catch((error) => {
+        console.error('Erro ao aprovar o pedido:', error);
+      });
+  }
+
+  rejeitarPedido(orderId: string): Promise<void> {
+    const pedidoRef = this.ordersCollection.doc(orderId);
+
+    // Atualizar o status para 'Rejeitado'
+    return pedidoRef
+      .update({ status: 'Rejeitado' })
+      .then(() => {
+        console.log('Pedido rejeitado com sucesso!');
+      })
+      .catch((error) => {
+        console.error('Erro ao rejeitar o pedido:', error);
+      });
+  }
 }
