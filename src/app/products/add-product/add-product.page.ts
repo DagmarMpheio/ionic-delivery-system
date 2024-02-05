@@ -44,16 +44,32 @@ export class AddProductPage implements OnInit {
     });
   }
 
+  /* getSelectedSupermarketUrl(): string {
+    const selectedSupermarketId = this.productForm.get('supermercadoId');
+
+    if (selectedSupermarketId?.value) {
+      const selectedSupermarket = this.supermercados.find(
+        (supermercado) => supermercado.$key === selectedSupermarketId.value
+      );
+
+      return selectedSupermarket ? selectedSupermarket.imgUrl : '';
+    } else {
+      return '';
+    }
+  } */
+
   formSubmit() {
     if (!this.productForm.valid) {
       return false;
     } else {
+      var supermercadoId = this.productForm.value.supermercadoId;
+
       return this.productService
         .createProduct(this.productForm.value, this.imageFile)
         .then((res) => {
           console.log(res);
           this.productForm.reset();
-          this.router.navigate(['/product-list']);
+          this.router.navigate(['/product-list', supermercadoId]);
           this.presentSuccessAlert();
         })
         .catch((error) => console.log(error));

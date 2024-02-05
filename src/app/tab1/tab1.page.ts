@@ -28,10 +28,10 @@ export class Tab1Page implements OnInit {
   loading = true;
 
   ngOnInit() {
-    this.productService.getProductsWithSupermarkets().subscribe((result) => {
+    /* this.productService.getProductsWithSupermarkets().subscribe((result) => {
       this.productsWithSupermarkets = result;
       console.log('supermercados2: ', this.productsWithSupermarkets);
-    });
+    }); */
     console.log('supermercados2: ', this.productsWithSupermarkets);
     /* this.productService.getProductWithMarket().subscribe((supermercados) => {
       console.log('supermercados: ', this.supermercados);

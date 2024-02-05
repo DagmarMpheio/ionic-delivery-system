@@ -9,6 +9,7 @@ export interface Product {
   desconto?: number;
   imgUrl: string;
   supermercadoId: string;
+  supermercadoImgUrl?: string;
 }
 
 export interface ProductWithSupermarket {
