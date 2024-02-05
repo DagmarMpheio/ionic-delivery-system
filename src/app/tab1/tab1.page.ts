@@ -47,7 +47,7 @@ export class Tab1Page implements OnInit {
           ...(t.payload.doc.data() as Product),
         };
       });
-      this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
+       this.loading = false; // Marcar como carregado quando os dados estiverem disponíveis
     });
 
     //carrinho

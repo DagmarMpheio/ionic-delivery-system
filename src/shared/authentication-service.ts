@@ -92,6 +92,12 @@ export class AuthenticationService {
     return user.emailVerified !== false ? true : false;
   }
 
+  // Retornar verdadeiro se o usuario for admin
+  isUserAdmin(): boolean {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user !== null && user.isAdmin === true;
+  }
+
   //Autenticacao com Gmail
   GoogleAuth() {
     return this.AuthLogin(new auth.GoogleAuthProvider());
@@ -123,6 +129,7 @@ export class AuthenticationService {
       displayName: user.displayName,
       photoURL: user.photoURL,
       emailVerified: user.emailVerified,
+      isAdmin: false,
     };
     return userRef.set(userData, {
       merge: true,

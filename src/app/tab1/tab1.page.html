@@ -33,8 +33,8 @@
     </ion-card>  
   </div>
 
-  <div class="loading-container">
-    <ion-spinner *ngIf="loading"></ion-spinner>
+  <div class="loading-container" *ngIf="loading">
+    <ion-spinner></ion-spinner>
     <p class="loading-message">Carregando...</p>
   </div>
   <!-- <div *ngIf="!(productsWithSupermarkets$ | async)">Loading...</div> -->

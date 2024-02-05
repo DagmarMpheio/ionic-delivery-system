@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Product, ProductWithSupermarket } from '../../shared/product';
 import { Supermarket } from '../../shared/supermarket';
 
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Router } from '@angular/router';
-import { finalize, map, switchMap, catchError, tap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { finalize, map, switchMap, catchError, tap, first } from 'rxjs/operators';
+import { combineLatest, forkJoin, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -97,6 +97,20 @@ export class ProductService {
         throw error;
       })
     );
+  }
+
+  getProductWithMarket() {
+    const item: AngularFirestoreCollection = this.ngFirestore.collection(`produtos`, ref => ref.orderBy('nome'));
+    return item.valueChanges().pipe(switchMap(arr => {
+      const supermercadoObservable = arr.map((supermercado:any) => this.ngFirestore.doc(`supermercados/${supermercado.id}`).valueChanges().pipe(first()));
+      return combineLatest(...supermercadoObservable).pipe(map((...supermercados:any) => {
+        arr.forEach((supermercadoo, index) => {
+          supermercadoo['id'] = supermercados[0][index]['id'];
+        });
+        return arr;
+      })
+      );
+    }));
   }
 
   /* getProductsWithSupermarkets(): Observable<any[]> {
